@@ -56,8 +56,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                           labelStyle: TextStyle(color: Colors.white),
                           hoverColor: Colors.white,
                           labelText: 'Contraseña',
-                          prefixIcon:
-                              Icon(Icons.supervised_user_circle_outlined)),
+                          prefixIcon: Icon(Icons.lock_outline_rounded)),
                       onChanged: (value) => {},
                       validator: (value) {
                         return (value != null && value.length >= 4) ? null : '';
