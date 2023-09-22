@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import 'screens/screens.dart';
 
@@ -13,7 +12,6 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      builder: FToastBuilder(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true),
       title: 'Compras',
