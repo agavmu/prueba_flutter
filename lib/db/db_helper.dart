@@ -68,42 +68,4 @@ class DbHelper {
 
   final String tablePedidos = 'pedidos';
   final String tableProductos = 'productoscatalogo';
-
-  // Acciones de la tabla productos
-  Future<int> insertCart(CartItem cart) async {
-    Database db = await database;
-    return db.insert(tableProductos, cart.toMap());
-  }
-
-  // Acciones de la tabla pedidos
-  Future<int> insertOrder(Order order) async {
-    Database db = await database;
-    return db.insert(tablePedidos, order.toMap());
-  }
-
-  Future<int> deleteOrder(Order order) async {
-    Database db = await database;
-    return db.delete(tablePedidos, where: 'id = ?', whereArgs: [order.id]);
-  }
-
-  Future<int> updateOrder(Order order) async {
-    Database db = await database;
-    return db.update(tablePedidos, order.toMap(),
-        where: 'id = ?', whereArgs: [order.id]);
-  }
-
-  Future<List<Order>> orders() async {
-    Database db = await database;
-    final List<Map<String, dynamic>> ordersMap = await db.query(tablePedidos);
-    return List.generate(
-      ordersMap.length,
-      (index) => Order(
-        id: ordersMap[index]['id'],
-        fechaPedido: ordersMap[index]['fechaPedido'],
-        cliente: ordersMap[index]['cliente'],
-        detallePedido: ordersMap[index]['detallePedidos'],
-        cantidad: ordersMap[index]['cantidad'],
-      ),
-    );
-  }
 }
