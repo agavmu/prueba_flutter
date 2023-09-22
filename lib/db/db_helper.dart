@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import '../models/users.dart';
+
 class DbHelper {
   Future initDB() async {
     final dbpath = await getDatabasesPath();
@@ -18,7 +20,7 @@ class DbHelper {
       try {
         await Directory(dirname(path)).create(recursive: true);
       } catch (_) {}
-      ByteData data = await rootBundle.load(join("assets", "Database.db"));
+      ByteData data = await rootBundle.load(join("assets", "DataBase.db"));
       List<int> bytes =
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
@@ -40,7 +42,7 @@ class DbHelper {
     return openDatabase(join(await getDatabasesPath(), 'DataBase.db'),
         onCreate: (db, version) {
       return db.execute('''
-          CREATE TABLE $tablePedidos (
+          CREATE TABLE $tablaPedidos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             fechaPedido TEXT,
             cliente TEXT FOREIGN KEY,
@@ -52,10 +54,10 @@ class DbHelper {
   }
 
   Future<Database> _openTableProducts() async {
-    return openDatabase(join(await getDatabasesPath(), 'Database.db'),
+    return openDatabase(join(await getDatabasesPath(), 'DataBase.db'),
         onCreate: (db, version) {
       return db.execute('''
-          CREATE TABLE $tableProductos (
+          CREATE TABLE $tablaProductos (
             Codigo TEXT,
             Nombre TEXT,
             Precio REAL,
@@ -66,6 +68,24 @@ class DbHelper {
     }, version: 3);
   }
 
-  final String tablePedidos = 'pedidos';
-  final String tableProductos = 'productoscatalogo';
+  final String tablaPedidos = 'pedidos';
+  final String tablaProductos = 'productoscatalogo';
+
+  Future<List<User>> getUsers() async {
+    Database database = await initDB();
+
+    final List<Map<String, dynamic>> usersMap = await database.query("usuario");
+
+    for (var u in usersMap) {
+      print("----" + u['usuario']);
+    }
+
+    return List.generate(
+        usersMap.length,
+        (i) => User(
+              usuario: usersMap[i]['usuario'],
+              password: usersMap[i]['password'],
+              empresa: usersMap[i]['empresa'],
+            ));
+  }
 }

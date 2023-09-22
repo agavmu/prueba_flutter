@@ -11,6 +11,16 @@ class LoginFormScreen extends StatefulWidget {
 
 class _LoginFormScreenState extends State<LoginFormScreen> {
   final formKey = GlobalKey<FormState>();
+  final _usuarioController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usuarioController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaHeight = MediaQuery.of(context).size.height;
@@ -34,6 +44,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                 child: Column(
                   children: [
                     TextFormField(
+                      controller: _usuarioController,
                       style: const TextStyle(color: Colors.white),
                       autocorrect: false,
                       decoration: const InputDecoration(
@@ -43,12 +54,14 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                           labelText: 'Usuario',
                           prefixIcon:
                               Icon(Icons.supervised_user_circle_outlined)),
-                      onChanged: (value) => {},
                       validator: (value) {
                         return (value != null && value.length >= 4) ? null : '';
                       },
                     ),
                     TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      obscuringCharacter: '*',
                       style: const TextStyle(color: Colors.white),
                       autocorrect: false,
                       decoration: const InputDecoration(
@@ -57,7 +70,6 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                           hoverColor: Colors.white,
                           labelText: 'Contraseña',
                           prefixIcon: Icon(Icons.lock_outline_rounded)),
-                      onChanged: (value) => {},
                       validator: (value) {
                         return (value != null && value.length >= 4) ? null : '';
                       },
@@ -69,40 +81,6 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                   child: const Icon(Icons.send_rounded), onPressed: () {}),
             ],
           ),
-          // key: formKey,
-          // child: Column(
-          //   children: [
-          //     Padding(padding: EdgeInsets.only(top: 50)),
-          //     TextFormField(
-          //       style: const TextStyle(color: Colors.white),
-          //       autocorrect: false,
-          //       decoration: InputDecorations.authInputDecoration(
-          //           hintText: 'Usuario',
-          //           labelText: 'Usuario',
-          //           prefixIcon: Icons.supervised_user_circle_outlined),
-          //       onChanged: (value) => {},
-          //       validator: (value) {
-          //         return (value != null && value.length >= 4) ? null : '';
-          //       },
-          //     ),
-          //     const SizedBox(
-          //       height: 30,
-          //     ),
-          //     TextFormField(
-          //       style: const TextStyle(color: Colors.white),
-          //       autocorrect: false,
-          //       decoration: InputDecorations.authInputDecoration(
-          //           hintText: 'Contraseña',
-          //           labelText: 'Contraseña',
-          //           prefixIcon: Icons.lock_outline_rounded),
-          //       onChanged: (value) => {},
-          //       validator: (value) {
-          //         return (value != null && value.length >= 4) ? null : '';
-          //       },
-          //     ),
-          //     FloatingActionButton(onPressed: () {})
-          //   ],
-          // ),
         ),
       ),
     );
