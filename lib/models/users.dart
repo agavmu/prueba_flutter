@@ -1,11 +1,11 @@
 class User {
-  final String usuario;
+  final String code;
   final String password;
   final String? empresa;
 
-  User({required this.usuario, required this.password, this.empresa});
+  User({required this.code, required this.password, this.empresa});
 
   Map<String, dynamic> toMap() {
-    return {'usuario': usuario, 'password': password, 'empresa': empresa};
+    return {'usuario': code, 'password': password, 'empresa': empresa};
   }
 }

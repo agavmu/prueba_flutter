@@ -1,20 +1,19 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import '../models/users.dart';
+import '../models/models.dart';
 
 class DbHelper {
   Future initDB() async {
+    sqfliteFfiInit();
     final dbpath = await getDatabasesPath();
-    final path =
-        join(dbpath, "DataBase.db"); //nombre de la base de datos a migrar
-
+    final path = join(dbpath, "DataBase.db");
+    //nombre de la base de datos a migrar
     final exist = await databaseExists(path);
     if (exist) {
-      return 'La base de Datos existe';
     } else {
       //Creando una copia de la base de datos desde Assets
       try {
@@ -71,21 +70,33 @@ class DbHelper {
   final String tablaPedidos = 'pedidos';
   final String tablaProductos = 'productoscatalogo';
 
-  Future<List<User>> getUsers() async {
+  Future<bool> validLogin(User user) async {
     Database database = await initDB();
 
-    final List<Map<String, dynamic>> usersMap = await database.query("usuario");
+    final List<Map<String, dynamic>> users = await database.query('Usuario');
 
-    for (var u in usersMap) {
-      print("----" + u['usuario']);
+    for (var tmpUser in users) {
+      if (tmpUser['usuario'] == user.code &&
+          tmpUser['password'] == user.password) {
+        return true;
+      }
     }
+    return false;
+  }
+
+  Future<List<Seller>> getSeller() async {
+    Database database = await initDB();
+
+    final List<Map<String, dynamic>> sellersMap =
+        await database.query("Vendedor");
 
     return List.generate(
-        usersMap.length,
-        (i) => User(
-              usuario: usersMap[i]['usuario'],
-              password: usersMap[i]['password'],
-              empresa: usersMap[i]['empresa'],
-            ));
+      sellersMap.length,
+      (i) => Seller(
+        usuario: sellersMap[i]['usuario'],
+        empresa: sellersMap[i]['empresa'],
+        portafolio: sellersMap[i]['portafolio'],
+      ),
+    );
   }
 }

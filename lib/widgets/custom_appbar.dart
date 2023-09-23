@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppbar(
-      {super.key, required this.title, this.leading, this.titleWidget});
+      {super.key,
+      required this.title,
+      this.leading,
+      this.titleWidget,
+      this.style});
 
   final String title;
+  final TextStyle? style;
   final Widget? leading;
   final Widget? titleWidget;
 
@@ -17,13 +22,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Positioned.fill(
               child: titleWidget == null
-                  ? Center(
-                      child: Text(title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Colors.white,
-                          )))
+                  ? Center(child: Text(title, style: style))
                   : Center(
                       child: titleWidget,
                     ))
