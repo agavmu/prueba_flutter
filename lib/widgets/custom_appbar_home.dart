@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 
 class CustomAppbarHome extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppbarHome({super.key, required this.text});
+  const CustomAppbarHome({super.key, required this.text, this.leading});
 
   final Widget text;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 25, vertical: 25 / 2.5),
-            child: Center(
-              child: Card(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 100,
-                  padding: const EdgeInsets.only(top: 35),
-                  child: Center(child: text),
-                ),
-              ),
-            )));
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25 / 2.5),
+        child: AppBar(
+            title: text,
+            centerTitle: true,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25))),
+            leading: leading
+            // IconButton(
+            //     onPressed: () {}, icon: Icon(Icons.chevron_left_outlined)),
+            ),
+      ),
+    );
   }
 
   @override
-  Size get preferredSize => const Size(double.maxFinite, 120);
+  Size get preferredSize => const Size(double.maxFinite, 76);
 }

@@ -1,3 +1,4 @@
+export 'package:prueba/models/products_catalog.dart';
 export 'package:prueba/models/client.dart';
 export 'package:prueba/models/users.dart';
-export 'package:prueba/models/vendedor.dart';
+export 'package:prueba/models/seller.dart';

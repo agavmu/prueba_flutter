@@ -38,7 +38,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => HomeScreen(getSeller: seller),

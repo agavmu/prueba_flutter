@@ -1,9 +1,9 @@
 class Seller {
   final String code;
-  final String name;
+  final String? name;
   final String? portafolio;
 
-  Seller({required this.code, required this.name, this.portafolio});
+  Seller({required this.code, this.name, this.portafolio});
 
   Map<String, dynamic> toMap() {
     return {'codigo': code, 'nombre': name, 'portafolio': portafolio};

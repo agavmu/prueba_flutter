@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:prueba/db/db_helper.dart';
 import 'package:prueba/models/models.dart';
+import 'package:prueba/screens/screens.dart';
 
 import 'package:prueba/widgets/custom_appbar_home.dart';
 
@@ -17,23 +19,39 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: CustomAppbarHome(
-            text: Column(
-          children: [
-            Text(
-              'Bienvenido ${getSeller!.name}',
-              style: const TextStyle(
-                  color: Colors.red, fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-          ],
+            text: Text(
+          'Bienvenido ${getSeller!.name}',
+          style: const TextStyle(
+              color: Colors.red, fontWeight: FontWeight.bold, fontSize: 20),
         )),
-        body: Builder());
+        body: ListSeller(seller: getSeller));
   }
 }
 
-class Builder extends StatelessWidget {
-  const Builder({
+class ListSeller extends StatefulWidget {
+  const ListSeller({
     super.key,
+    this.seller,
   });
+
+  final Seller? seller;
+
+  @override
+  State<ListSeller> createState() => _ListSellerState();
+}
+
+class _ListSellerState extends State<ListSeller> {
+  Future<void> goProducts(String code) async {
+    final client = await DbHelper.getClientInfo();
+    if (mounted) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) =>
+                ProductsScreen(getClient: client),
+          ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +75,20 @@ class Builder extends StatelessWidget {
                     margin:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () async {
+                        if (cliente.code!.isNotEmpty) {
+                          goProducts(cliente.code!);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "No existe el cliente",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        }
+                      },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
