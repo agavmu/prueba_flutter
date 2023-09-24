@@ -2,13 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-
+import 'package:sqflite/sqflite.dart';
 import '../models/models.dart';
 
 class DbHelper {
-  Future initDB() async {
-    sqfliteFfiInit();
+  static Future initDB() async {
     final dbpath = await getDatabasesPath();
     final path = join(dbpath, "DataBase.db");
     //nombre de la base de datos a migrar
@@ -24,12 +22,11 @@ class DbHelper {
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
       await File(path).writeAsBytes(bytes, flush: true);
-      // Base de datos copiada
-      await openDatabase(path);
 
       _openTableOrders();
       _openTableProducts();
     }
+    return await openDatabase(path);
   }
 
   final Future<Database> database =
@@ -37,7 +34,7 @@ class DbHelper {
     return await openDatabase(join(path, 'DataBase.db'));
   });
 
-  Future<Database> _openTableOrders() async {
+  static Future<Database> _openTableOrders() async {
     return openDatabase(join(await getDatabasesPath(), 'DataBase.db'),
         onCreate: (db, version) {
       return db.execute('''
@@ -52,7 +49,7 @@ class DbHelper {
     }, version: 1);
   }
 
-  Future<Database> _openTableProducts() async {
+  static Future<Database> _openTableProducts() async {
     return openDatabase(join(await getDatabasesPath(), 'DataBase.db'),
         onCreate: (db, version) {
       return db.execute('''
@@ -67,10 +64,10 @@ class DbHelper {
     }, version: 3);
   }
 
-  final String tablaPedidos = 'pedidos';
-  final String tablaProductos = 'productoscatalogo';
+  static const String tablaPedidos = 'pedidos';
+  static const String tablaProductos = 'productoscatalogo';
 
-  Future<bool> validLogin(User user) async {
+  static Future<bool> validLogin(User user) async {
     Database database = await initDB();
 
     final List<Map<String, dynamic>> users = await database.query('Usuario');

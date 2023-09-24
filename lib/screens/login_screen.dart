@@ -13,7 +13,7 @@ class LoginFormScreen extends StatefulWidget {
 }
 
 class _LoginFormScreenState extends State<LoginFormScreen> {
-  final formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   TextEditingController usuarioController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -21,12 +21,11 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
   void initState() {
     usuarioController;
     passwordController;
-    DbHelper().initDB();
     super.initState();
   }
 
   Future<void> login(User user) async {
-    final successLogin = await DbHelper().validLogin(user);
+    final successLogin = await DbHelper.validLogin(user);
 
     if (successLogin) {
       Fluttertoast.showToast(
@@ -37,12 +36,16 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
-      // navigator;
+      Navigator.pushReplacementNamed(context, 'home');
     } else {
-      const AlertDialog(
-        title: Text('Datos incorrectos'),
-      );
-      return;
+      Fluttertoast.showToast(
+          msg: "No existe el usuario",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 
@@ -50,7 +53,6 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
   void dispose() {
     usuarioController.dispose();
     passwordController.dispose();
-    DbHelper().initDB();
     super.dispose();
   }
 
@@ -73,7 +75,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
         width: mediaWidth,
         decoration: BoxDecoration(color: Colors.blueAccent.shade200),
         child: Form(
-          key: formKey,
+          key: _formKey,
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -124,7 +126,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                 FloatingActionButton(
                   child: const Icon(Icons.send_rounded),
                   onPressed: () async {
-                    if (formKey.currentState!.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       login(User(
                           code: usuarioController.text,
                           password: passwordController.text));
