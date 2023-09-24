@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:prueba/db/db_helper.dart';
 import 'package:prueba/models/users.dart';
+import 'package:prueba/screens/screens.dart';
 
 import '../widgets/custom_appbar.dart';
 
@@ -26,8 +27,9 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
 
   Future<void> login(User user) async {
     final successLogin = await DbHelper.validLogin(user);
+    final seller = await DbHelper.getSellerInfo(user);
 
-    if (successLogin) {
+    if (mounted && successLogin) {
       Fluttertoast.showToast(
           msg: "Bienvenido",
           toastLength: Toast.LENGTH_SHORT,
@@ -36,7 +38,12 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
-      Navigator.pushReplacementNamed(context, 'home');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => HomeScreen(getSeller: seller),
+        ),
+      );
     } else {
       Fluttertoast.showToast(
           msg: "No existe el usuario",
@@ -70,18 +77,17 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
             fontSize: 20,
             color: Colors.white,
           )),
-      body: Container(
-        height: mediaHeight,
-        width: mediaWidth,
-        decoration: BoxDecoration(color: Colors.blueAccent.shade200),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: mediaHeight * 0.7,
+          width: mediaWidth,
+          child: Form(
+            key: _formKey,
             child: Column(
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                      vertical: mediaHeight * 0.26,
+                      vertical: mediaHeight * 0.2,
                       horizontal: mediaWidth * 0.2),
                   child: Column(
                     children: [

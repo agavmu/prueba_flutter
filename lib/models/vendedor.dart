@@ -1,11 +1,16 @@
 class Seller {
-  final String usuario;
-  final String empresa;
+  final String code;
+  final String name;
   final String? portafolio;
 
-  Seller({required this.usuario, required this.empresa, this.portafolio});
+  Seller({required this.code, required this.name, this.portafolio});
 
   Map<String, dynamic> toMap() {
-    return {'nombre': usuario, 'empresa': empresa, 'portafolio': portafolio};
+    return {'codigo': code, 'nombre': name, 'portafolio': portafolio};
+  }
+
+  @override
+  String toString() {
+    return 'Vendedor{codigo: $code, nombre: $name, portafolio: $portafolio}';
   }
 }

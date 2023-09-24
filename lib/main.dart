@@ -13,12 +13,20 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: Colors.blueAccent.shade200,
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(),
+          bodyMedium: TextStyle(),
+        ).apply(
+          bodyColor: Colors.white,
+        ),
+      ),
       title: 'Compras',
       initialRoute: 'login',
       routes: {
         'login': (_) => const LoginFormScreen(),
-        'home': (_) => const HomeScreen(),
       },
     );
   }

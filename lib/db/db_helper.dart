@@ -81,7 +81,7 @@ class DbHelper {
     return false;
   }
 
-  Future<List<Seller>> getSeller() async {
+  static Future<List<Seller>> getSeller() async {
     Database database = await initDB();
 
     final List<Map<String, dynamic>> sellersMap =
@@ -90,9 +90,56 @@ class DbHelper {
     return List.generate(
       sellersMap.length,
       (i) => Seller(
-        usuario: sellersMap[i]['usuario'],
-        empresa: sellersMap[i]['empresa'],
+        code: sellersMap[i]['codigo'],
+        name: sellersMap[i]['nombre'],
         portafolio: sellersMap[i]['portafolio'],
+      ),
+    );
+  }
+
+  static Future<Seller?> getSellerInfo(User user) async {
+    Database database = await initDB();
+
+    final List<Map<String, dynamic>> sellers = await database.query('Vendedor');
+
+    for (var tmpSeller in sellers) {
+      if (tmpSeller['codigo'] == user.code) {
+        return Seller(
+            code: tmpSeller['codigo'],
+            name: tmpSeller['nombre'],
+            portafolio: tmpSeller['portafolio']);
+      }
+    }
+    return null;
+  }
+
+  // obtener los clientes por medio de el vendedor
+  // static Future<List<Client>> getClientsBySeller(Seller seller) async {
+  //   Database database = await initDB();
+
+  //   final List<Map<String, dynamic>> clients = await database
+  //       .query('Clientes', where: 'Vendedor1 = ?', whereArgs: [seller.code]);
+
+  //   return List.generate(clients.length, (i) {
+  //     return Client(
+  //       code: clients[i]['Vendedor1'],
+  //       name: clients[i]['Nombre'],
+  //       address: clients[i]['Barrio'],
+  //     );
+  //   });
+  // }
+
+  static Future<List<Client>> getClients() async {
+    Database database = await initDB();
+
+    final List<Map<String, dynamic>> clientsMap =
+        await database.query("Clientes");
+
+    return List.generate(
+      clientsMap.length,
+      (i) => Client(
+        name: clientsMap[i]['Nombre'],
+        address: clientsMap[i]['Barrio'],
       ),
     );
   }

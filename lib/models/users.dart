@@ -8,4 +8,9 @@ class User {
   Map<String, dynamic> toMap() {
     return {'usuario': code, 'password': password, 'empresa': empresa};
   }
+
+  // @override
+  // String toString() {
+  //   return 'Usuario{usuario: $code, empresa: $empresa}';
+  // }
 }
