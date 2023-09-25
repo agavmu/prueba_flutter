@@ -1,0 +1,9 @@
+Consultas sql
+
+* Listar todos los empleados el cual vivan en el departamento “Quindío” sean del área de “Sistemas” y su sueldo básico supere los $2.000.000 
+
+SELECT * FROM empleados WHERE departamento = “Quindio” AND sueldo > 2000000;
+
+* Mostrar el empleado con el sueldo mayor y el empleado con el sueldo Menor  
+SELECT MAX(sueldo) FROM empleado;
+SELECT MIN(sueldo) FROM empleado;
