@@ -75,7 +75,7 @@ class _ListSellerState extends State<ListSeller> {
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     child: InkWell(
                       onTap: () async {
-                        if (cliente.code!.isNotEmpty) {
+                        if (cliente.code.isNotEmpty) {
                           goProducts(cliente);
                         } else {
                           Fluttertoast.showToast(
