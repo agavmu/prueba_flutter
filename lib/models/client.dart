@@ -1,12 +1,12 @@
 class Client {
-  final String? code;
+  final String code;
   final String name;
   final String? address;
 
   Client({
     required this.name,
     this.address,
-    this.code,
+    required this.code,
   });
 
   Map<String, dynamic> toMap() {

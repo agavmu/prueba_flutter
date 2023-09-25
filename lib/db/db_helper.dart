@@ -4,15 +4,18 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/models.dart';
+import 'package:collection/collection.dart';
 
 class DbHelper {
+  static const String tablaPedidos = 'pedidos';
+  static const String tablaProductos = 'detallesPedido';
+
   static Future initDB() async {
     final dbpath = await getDatabasesPath();
     final path = join(dbpath, "DataBase.db");
     //nombre de la base de datos a migrar
     final exist = await databaseExists(path);
-    if (exist) {
-    } else {
+    if (!exist) {
       //Creando una copia de la base de datos desde Assets
       try {
         await Directory(dirname(path)).create(recursive: true);
@@ -23,49 +26,33 @@ class DbHelper {
 
       await File(path).writeAsBytes(bytes, flush: true);
 
-      _openTableOrders();
-      _openTableProducts();
+      Database database = await openDatabase(path);
+      database.execute('''
+          CREATE TABLE $tablaPedidos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            fechaPedido TEXT,
+            cliente TEXT NOT NULL,
+            total REAL
+            )
+            ''');
+
+      database.execute('''
+          CREATE TABLE $tablaProductos (
+            idPedido TEXT NOT NULL,
+            Codigo TEXT,
+            Nombre TEXT,
+            Precio REAL,
+            Cantidad INTEGER
+            )
+            ''');
     }
     return await openDatabase(path);
   }
 
-  final Future<Database> database =
-      getDatabasesPath().then((String path) async {
-    return await openDatabase(join(path, 'DataBase.db'));
-  });
-
-  static Future<Database> _openTableOrders() async {
-    return openDatabase(join(await getDatabasesPath(), 'DataBase.db'),
-        onCreate: (db, version) {
-      return db.execute('''
-          CREATE TABLE $tablaPedidos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            fechaPedido TEXT,
-            cliente TEXT FOREIGN KEY,
-            detallePedido TEXT,
-            total INTEGER
-            )
-            ''');
-    }, version: 2);
-  }
-
-  static Future<Database> _openTableProducts() async {
-    return openDatabase(join(await getDatabasesPath(), 'DataBase.db'),
-        onCreate: (db, version) {
-      return db.execute('''
-          CREATE TABLE $tablaProductos (
-            idPedido Text FOREIGN KEY,
-            Codigo TEXT,
-            Nombre TEXT,
-            Precio REAL,
-            Cantidad REAL
-            )
-            ''');
-    }, version: 4);
-  }
-
-  static const String tablaPedidos = 'pedidos';
-  static const String tablaProductos = 'productoscatalogo';
+  // final Future<Database> database =
+  //     getDatabasesPath().then((String path) async {
+  //   return await openDatabase(join(path, 'DataBase.db'));
+  // });
 
   static Future<bool> validLogin(User user) async {
     Database database = await initDB();
@@ -155,8 +142,32 @@ class DbHelper {
         name: productsMap[i]['Nombre'],
         price: productsMap[i]['Precio'],
         archive: productsMap[i]['Archive'],
+        code: productsMap[i]['Codigo'],
       ),
     );
+  }
+
+  static Future<void> saveProducts(
+      List<ProductsCatalog> productos, Client client) async {
+    Database database = await initDB();
+
+    int id = await database.insert(
+        tablaPedidos,
+        Pedidos(
+                fechaPedido: DateTime.now().toString(),
+                cliente: client.code,
+                total: productos.map((m) => m.price * m.quantity).sum)
+            .toMap());
+
+    for (var item in productos) {
+      await database.insert(tablaProductos, {
+        'idPedido': id,
+        'Codigo': item.code,
+        'Nombre': item.name,
+        'Precio': item.price,
+        'Cantidad': item.quantity
+      });
+    }
   }
 
   // obtener los clientes por medio de el vendedor

@@ -41,8 +41,7 @@ class ListSeller extends StatefulWidget {
 }
 
 class _ListSellerState extends State<ListSeller> {
-  Future<void> goProducts(String code) async {
-    final client = await DbHelper.getClientInfo();
+  Future<void> goProducts(Client client) async {
     if (mounted) {
       Navigator.push(
           context,
@@ -77,7 +76,7 @@ class _ListSellerState extends State<ListSeller> {
                     child: InkWell(
                       onTap: () async {
                         if (cliente.code!.isNotEmpty) {
-                          goProducts(cliente.code!);
+                          goProducts(cliente);
                         } else {
                           Fluttertoast.showToast(
                               msg: "No existe el cliente",
